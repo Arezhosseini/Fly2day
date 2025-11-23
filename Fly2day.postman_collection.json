@@ -1,0 +1,231 @@
+{
+	"info": {
+		"_postman_id": "0d0494bb-e02e-47d7-a015-e6e91b61dce7",
+		"name": "Fly2day",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31125926"
+	},
+	"item": [
+		{
+			"name": "FlightSearch",
+			"item": [
+				{
+					"name": "flight/search",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// List of cities",
+									"const cities = [\"MHD\", \"SYZ\", \"IFN\", \"TBZ\", \"KIH\"];",
+									"",
+									"// Pick a random city",
+									"const selectedCity = cities[Math.floor(Math.random() * cities.length)];",
+									"",
+									"// Save it as an environment (or collection) variable",
+									"pm.environment.set(\"destinationLocationCode\", selectedCity);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Validate response status using pm.response",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Log status code and status text for debugging",
+									"console.log(\"Status code:\", pm.response.code);",
+									"console.log(\"Status text:\", pm.response.status);",
+									"",
+									"// Parse JSON safely and add basic schema checks",
+									"let isJson = false;",
+									"let data = null;",
+									"try {",
+									"    data = pm.response.json();",
+									"    isJson = true;",
+									"} catch (e) {",
+									"    isJson = false;",
+									"}",
+									"",
+									"pm.test(\"Response body is JSON\", function () {",
+									"    pm.expect(isJson, \"Response is not valid JSON\").to.be.true;",
+									"});",
+									"",
+									"if (isJson && data) {",
+									"    pm.test(\"Body has expected top-level keys\", function () {",
+									"        pm.expect(data).to.be.an(\"object\");",
+									"        pm.expect(Object.keys(data)).to.include.any.members([\"searchId\", \"pricedItineraries\"]);",
+									"    });",
+									"",
+									"    pm.test(\"searchId is a number when present\", function () {",
+									"        if (Object.prototype.hasOwnProperty.call(data, \"searchId\")) {",
+									"            pm.expect(data.searchId).to.be.a(\"number\");",
+									"        }",
+									"    });",
+									"",
+									"    pm.test(\"pricedItineraries is an array when present\", function () {",
+									"        if (Object.prototype.hasOwnProperty.call(data, \"pricedItineraries\")) {",
+									"            pm.expect(data.pricedItineraries).to.be.an(\"array\");",
+									"        }",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "accept",
+								"value": "*/*"
+							},
+							{
+								"key": "accept-language",
+								"value": "fa"
+							},
+							{
+								"key": "content-type",
+								"value": "application/json"
+							},
+							{
+								"key": "origin",
+								"value": "https://www.flytoday.ir"
+							},
+							{
+								"key": "priority",
+								"value": "u=1, i"
+							},
+							{
+								"key": "referer",
+								"value": "https://www.flytoday.ir/flight/search?departure=thr,1&arrival=mhd,1&departureDate=2025-11-22&adt=1&chd=0&inf=0&cabin=1&isDomestic=true&isAnyWhere=false"
+							},
+							{
+								"key": "sec-ch-ua",
+								"value": "\"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\""
+							},
+							{
+								"key": "sec-ch-ua-mobile",
+								"value": "?0"
+							},
+							{
+								"key": "sec-ch-ua-platform",
+								"value": "\"macOS\""
+							},
+							{
+								"key": "sec-fetch-dest",
+								"value": "empty"
+							},
+							{
+								"key": "sec-fetch-mode",
+								"value": "cors"
+							},
+							{
+								"key": "sec-fetch-site",
+								"value": "same-origin"
+							},
+							{
+								"key": "user-agent",
+								"value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
+							},
+							{
+								"key": "x-app",
+								"value": "www.flytoday.ir"
+							},
+							{
+								"key": "x-currency",
+								"value": "IRR"
+							},
+							{
+								"key": "x-header-home",
+								"value": "https://www.google.com/"
+							},
+							{
+								"key": "x-origin",
+								"value": "https://www.flytoday.ir"
+							},
+							{
+								"key": "x-path",
+								"value": "https://www.flytoday.ir/flight/search?departure=thr,1&arrival=mhd,1&departureDate=2025-11-22&adt=1&chd=0&inf=0&cabin=1&isDomestic=true&isAnyWhere=false"
+							},
+							{
+								"key": "x-proxy-cache",
+								"value": "no-store"
+							},
+							{
+								"key": "x-proxy-origin",
+								"value": ""
+							},
+							{
+								"key": "x-token",
+								"value": "4e6b4c57714d7a747945335039664e354a55367634552b73307862316a6c74666a734e6738304e72584d6e61796e6a34595359646250342b794b6a3863737951"
+							},
+							{
+								"key": "Cookie",
+								"value": "i18n=%7B%22lang%22%3A%22fa%22%2C%22currency%22%3A%22IRR%22%2C%22region%22%3A%22ir%22%7D; _gcl_au=1.1.329680095.1763817037; analytics_campaign={%22source%22:%22google%22%2C%22medium%22:%22organic%22}; analytics_token=6450d93f-b9ad-71fe-47a5-65cfa689982b; analytics_session_token=9805e367-6005-91f8-15ec-746facc9fbb3; yektanet_session_last_activity=11/22/2025; _yngt_iframe=1; _ga=GA1.1.1343695683.1763817037; _yngt=01JP04EGXV05X39KQ46SPZXCSZ; lastSearchTabStatus=domFlight; gbUserId=xq6ucr77r; _ga_XF01PHM6KS=GS2.1.s1763817037$o1$g1$t1763817084$j13$l0$h851181766"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pricingSourceType\": 0,\n    \"adultCount\": 1,\n    \"childCount\": 0,\n    \"infantCount\": 0,\n    \"travelPreference\": {\n        \"cabinType\": \"Y\",\n        \"maxStopsQuantity\": \"All\",\n        \"airTripType\": \"OneWay\"\n    },\n    \"originDestinationInformations\": [\n        {\n            \"departureDateTime\": \"2025-11-23\",\n            \"destinationLocationCode\": \"{{destinationLocationCode}}\",\n            \"destinationType\": \"City\",\n            \"originLocationCode\": \"THR\",\n            \"originType\": \"City\"\n        }\n    ],\n    \"isJalali\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseurl}}/gateway/V1/flight/search",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"gateway",
+								"V1",
+								"flight",
+								"search"
+							]
+						},
+						"description": "Generated from cURL: curl 'https://www.flytoday.ir/api/gateway/V1/flight/search' \\\n  -H 'accept: */*' \\\n  -H 'accept-language: fa' \\\n  -H 'content-type: application/json' \\\n  -b 'i18n=%7B%22lang%22%3A%22fa%22%2C%22currency%22%3A%22IRR%22%2C%22region%22%3A%22ir%22%7D; _gcl_au=1.1.329680095.1763817037; analytics_campaign={%22source%22:%22google%22%2C%22medium%22:%22organic%22}; analytics_token=6450d93f-b9ad-71fe-47a5-65cfa689982b; analytics_session_token=9805e367-6005-91f8-15ec-746facc9fbb3; yektanet_session_last_activity=11/22/2025; _yngt_iframe=1; _ga=GA1.1.1343695683.1763817037; _yngt=01JP04EGXV05X39KQ46SPZXCSZ; lastSearchTabStatus=domFlight; gbUserId=xq6ucr77r; _ga_XF01PHM6KS=GS2.1.s1763817037$o1$g1$t1763817084$j13$l0$h851181766' \\\n  -H 'origin: https://www.flytoday.ir' \\\n  -H 'priority: u=1, i' \\\n  -H 'referer: https://www.flytoday.ir/flight/search?departure=thr,1&arrival=mhd,1&departureDate=2025-11-22&adt=1&chd=0&inf=0&cabin=1&isDomestic=true&isAnyWhere=false' \\\n  -H 'sec-ch-ua: \"Chromium\";v=\"142\", \"Google Chrome\";v=\"142\", \"Not_A Brand\";v=\"99\"' \\\n  -H 'sec-ch-ua-mobile: ?0' \\\n  -H 'sec-ch-ua-platform: \"macOS\"' \\\n  -H 'sec-fetch-dest: empty' \\\n  -H 'sec-fetch-mode: cors' \\\n  -H 'sec-fetch-site: same-origin' \\\n  -H 'user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36' \\\n  -H 'x-app: www.flytoday.ir' \\\n  -H 'x-currency: IRR' \\\n  -H 'x-header-home: https://www.google.com/' \\\n  -H 'x-origin: https://www.flytoday.ir' \\\n  -H 'x-path: https://www.flytoday.ir/flight/search?departure=thr,1&arrival=mhd,1&departureDate=2025-11-22&adt=1&chd=0&inf=0&cabin=1&isDomestic=true&isAnyWhere=false' \\\n  -H 'x-proxy-cache: no-store' \\\n  -H 'x-proxy-origin;' \\\n  -H 'x-token: 4e6b4c57714d7a747945335039664e354a55367634552b73307862316a6c74666a734e6738304e72584d6e61796e6a34595359646250342b794b6a3863737951' \\\n  --data-raw '{\"pricingSourceType\":0,\"adultCount\":1,\"childCount\":0,\"infantCount\":0,\"travelPreference\":{\"cabinType\":\"Y\",\"maxStopsQuantity\":\"All\",\"airTripType\":\"OneWay\"},\"originDestinationInformations\":[{\"departureDateTime\":\"2025-11-22\",\"destinationLocationCode\":\"MHD\",\"destinationType\":\"City\",\"originLocationCode\":\"THR\",\"originType\":\"City\"}],\"isJalali\":true}'"
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							"",
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}
